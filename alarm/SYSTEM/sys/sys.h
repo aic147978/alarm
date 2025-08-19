@@ -40,17 +40,17 @@ typedef __I int32_t vsc32;
 typedef __I int16_t vsc16; 
 typedef __I int8_t vsc8;   
 
-typedef uint32_t  uint32_t;
-typedef uint16_t uint16_t;
-typedef uint8_t  uint8_t;
+typedef uint32_t  u32;
+typedef uint16_t u16;
+typedef uint8_t  u8;
 
 typedef const uint32_t uc32;  
 typedef const uint16_t uc16;  
 typedef const uint8_t uc8; 
 
-typedef __IO uint32_t  vuint32_t;
-typedef __IO uint16_t vuint16_t;
-typedef __IO uint8_t  vuint8_t;
+typedef __IO uint32_t  vu32;
+typedef __IO uint16_t vu16;
+typedef __IO uint8_t  vu8;
 
 typedef __I uint32_t vuc32;  
 typedef __I uint16_t vuc16; 

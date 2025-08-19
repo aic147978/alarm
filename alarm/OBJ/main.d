@@ -73,3 +73,15 @@
 ..\obj\main.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_hcd.h
 ..\obj\main.o: ..\SYSTEM\delay\delay.h
 ..\obj\main.o: ..\SYSTEM\usart\usart.h
+..\obj\main.o: ..\HARDWARE\LED\led.h
+..\obj\main.o: ..\HARDWARE\KEY\key.h
+..\obj\main.o: ..\HARDWARE\lcd\lcd.h
+..\obj\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+..\obj\main.o: ..\HARDWARE\SDRAM\sdram.h
+..\obj\main.o: ..\HARDWARE\touch\touch.h
+..\obj\main.o: ..\HARDWARE\touch\ott2001a.h
+..\obj\main.o: ..\HARDWARE\touch\gt9147.h
+..\obj\main.o: ..\HARDWARE\touch\gt9271.h
+..\obj\main.o: ..\HARDWARE\touch\ft5206.h
+..\obj\main.o: ..\HARDWARE\easyUI\easyUI.h
+..\obj\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
