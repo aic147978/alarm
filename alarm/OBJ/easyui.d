@@ -81,3 +81,9 @@
 ..\obj\easyui.o: ..\HARDWARE\touch\gt9147.h
 ..\obj\easyui.o: ..\HARDWARE\touch\gt9271.h
 ..\obj\easyui.o: ..\HARDWARE\touch\ft5206.h
+..\obj\easyui.o: ..\TEXT\text.h
+..\obj\easyui.o: ..\TEXT\fontupd.h
+..\obj\easyui.o: ..\HARDWARE\DHT11\dht11.h
+..\obj\easyui.o: ..\HARDWARE\PCF8574\pcf8574.h
+..\obj\easyui.o: ..\HARDWARE\IIC\myiic.h
+..\obj\easyui.o: ..\HARDWARE\RTC\rtc.h

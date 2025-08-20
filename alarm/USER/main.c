@@ -7,6 +7,18 @@
 #include "sdram.h"
 #include "touch.h"
 #include "easyUI.h"
+#include "w25qxx.h"
+#include "ff.h"
+#include "exfuns.h"
+#include "string.h"
+#include "sdio_sdcard.h"
+#include "fontupd.h"
+#include "text.h"
+#include "malloc.h"
+#include "pcf8574.h"
+#include "dht11.h"
+#include "usmart.h"
+#include "rtc.h"
 
 void Load_Drow_Dialog(void)
 {
@@ -114,6 +126,7 @@ const u16 POINT_COLOR_TBL[10]={RED,GREEN,BLUE,BROWN,GRED,BRED,GBLUE,LIGHTBLUE,BR
 void ctp_test(void)
 {
 	u16 x,y;
+	u16 abc,bac;
 	u8 t=0;
 	u8 i=0;	  	    
  	u16 lastpos[10][2];		//最后一次的数据 
@@ -137,7 +150,9 @@ void ctp_test(void)
 					lcd_draw_bline(lastpos[t][0],lastpos[t][1],tp_dev.x[t],tp_dev.y[t],2,POINT_COLOR_TBL[t]);//画线
 					lastpos[t][0]=tp_dev.x[t];
 					lastpos[t][1]=tp_dev.y[t];
+
 					UI_TouchHandler(x,y);
+		
 					if(tp_dev.x[t]>(lcddev.width-24)&&tp_dev.y[t]<20)
 					{
 						Load_Drow_Dialog();//清除
@@ -146,12 +161,18 @@ void ctp_test(void)
 			}else lastpos[t][0]=0XFFFF;
 		} 
 		delay_ms(5);i++;
+		UI_DATA_Show(abc,bac);
 		if(i%20==0)LED0=!LED0;
 	}	
 }
 
 int main(void)
 {
+//    u32 fontcnt;		  
+//	u8 i,j;
+//	u8 fontx[2];                    //gbk码
+//	u8 key,t;
+	
     HAL_Init();                     //初始化HAL库   
     Stm32_Clock_Init(360,25,2,8);   //设置时钟,180Mhz
     delay_init(180);                //初始化延时函数
@@ -162,7 +183,19 @@ int main(void)
     LCD_Init();                     //初始化LCD
 	tp_dev.init();				    //触摸屏初始化 
   	POINT_COLOR=RED;
-    UI_Init();
+	PCF8574_Init();
+	PCF8574_ReadBit(BEEP_IO);
+    DHT11_Init();
+	font_init();
+    my_mem_init(SRAMIN);            //初始化内部内存池
+    my_mem_init(SRAMEX);            //初始化外部SDRAM内存池
+    my_mem_init(SRAMCCM);           //初始化内部CCM内存池
+    exfuns_init();		            //为fatfs相关变量申请内存
+	W25QXX_Init();
+	RTC_Init();                     //初始化RTC 
+	f_mount(fs[0],"0:",1);          //挂载SD卡 
+  	f_mount(fs[1],"1:",1);          //挂载SPI FLASH. 
+	UI_Init();
 
     ctp_test();
 

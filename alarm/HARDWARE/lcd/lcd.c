@@ -182,8 +182,30 @@ uint16_t g_curX, g_curY;
 
 void LCD_GetCursor(u16 *x,u16 *y)
 {
-    *x = g_curX;
-    *y = g_curY;
+//	u16 m,n;
+    static u16 lastX = 0, lastY = 0;  // 保存上次的坐标
+    int dx, dy;
+    char buf[32];
+
+    // 当前坐标（假设 g_curX/g_curY 已经由触摸驱动更新）
+    dx = abs(g_curX - lastX);
+    dy = abs(g_curY - lastY);
+
+    if (dx < 3 && dy < 3) {
+        *x = 0;
+        *y = 0;
+    } else {
+        *x = g_curX;
+        *y = g_curY;
+        lastX = g_curX;
+        lastY = g_curY;
+    }
+
+    sprintf(buf, "X:%4d  Y:%4d", *x, *y);
+    LCD_ShowString(50, 50, 200, 16, 16, (uint8_t*)buf);
+//m=*x,n=*y;
+//    sprintf(buf, "X:%4d  Y:%4d", m, n);  // 格式化为字符串
+//    LCD_ShowString(50, 50, 200, 16, 16, (uint8_t*)buf);
 }
 
 //设置光标位置(对RGB屏无效)
@@ -193,6 +215,7 @@ void LCD_SetCursor(u16 Xpos, u16 Ypos)
 {
 	g_curX = Xpos;
     g_curY = Ypos;
+//	Xpos=0,Ypos=0;
     if (lcddev.id == 0X1963)
     {
         if (lcddev.dir == 0)   //x坐标需要变换

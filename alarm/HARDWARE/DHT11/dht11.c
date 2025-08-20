@@ -1,6 +1,6 @@
 #include "dht11.h"
 #include "delay.h"
-
+#include "pcf8574.h"
 
 //复位DHT11
 void DHT11_Rst(void)	   
@@ -78,6 +78,7 @@ uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi)
 {        
  	uint8_t buf[5];
 	uint8_t i;
+	PCF8574_ReadBit(BEEP_IO);
 	DHT11_Rst();
 	if(DHT11_Check()==0)
 	{
@@ -91,7 +92,8 @@ uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi)
 			*temp=buf[2];
 		}
 	}else return 1;
-	return 0;	    
+	return 0;
+	
 }
 
 //初始化DHT11的IO口 DQ 同时检测DHT11的存在

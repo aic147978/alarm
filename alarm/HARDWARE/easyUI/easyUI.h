@@ -16,6 +16,8 @@ void UI_DrawMainScreen(void);
 // ´¥Ãþ¼ì²â
 void UI_TouchHandler(uint16_t tx, uint16_t ty);
 
+void UI_DATA_Show(u16 x, u16 y);
+
 // ×¢²á°´Å¥
 void UI_AddButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
                   const char* text, void (*callback)(void));
@@ -24,3 +26,14 @@ void UI_AddButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
 void UI_DrawButtons(void);
 
 #endif
+
+
+
+
+
+
+
+
+
+
+

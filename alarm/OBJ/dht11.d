@@ -73,3 +73,5 @@
 ..\obj\dht11.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 ..\obj\dht11.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_hcd.h
 ..\obj\dht11.o: ..\SYSTEM\delay\delay.h
+..\obj\dht11.o: ..\HARDWARE\PCF8574\pcf8574.h
+..\obj\dht11.o: ..\HARDWARE\IIC\myiic.h
