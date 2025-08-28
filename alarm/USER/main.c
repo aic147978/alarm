@@ -19,6 +19,7 @@
 #include "dht11.h"
 #include "usmart.h"
 #include "rtc.h"
+#include "esp8266.h"
 
 void Load_Drow_Dialog(void)
 {
@@ -193,6 +194,7 @@ int main(void)
     exfuns_init();		            //为fatfs相关变量申请内存
 	W25QXX_Init();
 	RTC_Init();                     //初始化RTC 
+	ESP8266_Init(115200);
 	f_mount(fs[0],"0:",1);          //挂载SD卡 
   	f_mount(fs[1],"1:",1);          //挂载SPI FLASH. 
 	UI_Init();

@@ -87,3 +87,4 @@
 ..\obj\easyui.o: ..\HARDWARE\PCF8574\pcf8574.h
 ..\obj\easyui.o: ..\HARDWARE\IIC\myiic.h
 ..\obj\easyui.o: ..\HARDWARE\RTC\rtc.h
+..\obj\easyui.o: ..\HARDWARE\esp8266driver\esp8266.h

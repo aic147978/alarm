@@ -101,3 +101,4 @@
 ..\obj\main.o: ..\USMART\usmart.h
 ..\obj\main.o: ..\USMART\usmart_str.h
 ..\obj\main.o: ..\HARDWARE\RTC\rtc.h
+..\obj\main.o: ..\HARDWARE\esp8266driver\esp8266.h

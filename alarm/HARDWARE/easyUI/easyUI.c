@@ -1,5 +1,6 @@
 #include "easyUI.h"
 #include <string.h>
+#include <stdio.h>
 #include "lcd.h"   // 你自己的LCD驱动
 #include "touch.h" // 触摸屏驱动
 #include "text.h"
@@ -7,12 +8,25 @@
 #include "dht11.h"
 #include "pcf8574.h"
 #include "rtc.h"
+#include "esp8266.h"
+
+
+// Target temperature (0.1C units)
+static int target_temp = 250;
+
+#define ESP8266_MAX_RESP 256
+static char esp8266_resp[ESP8266_MAX_RESP];
 //const unsigned char hanzi_wen[32] = {
 //    0x00,0x10,0x00,0x10,0x3F,0xFC,0x20,0x08,
 //    0x20,0x08,0x3F,0xF8,0x22,0x48,0x22,0x48,
 //    0x3E,0x48,0x22,0x48,0x22,0x48,0x3E,0x48,
 //    0x20,0x48,0x20,0x48,0x20,0x48,0x00,0x48
 //};
+static u8 rtc_set_year, rtc_set_month, rtc_set_day;
+static u8 rtc_set_hour, rtc_set_min, rtc_set_sec;
+static u8 rtc_set_initialized = 0;
+
+
 void UI_Main_show(void){
 		u8 T,dT,temperature, humidity;
         static u8 T_last=0;
@@ -296,10 +310,16 @@ void UI_300(void) {
     LCD_Clear(WHITE);
 
     Show_Str_Mid(130,209,"当前温度",32,220);
-    Show_Str_Mid(130,284,"目标温度",32,220);
+ //   Show_Str_Mid(130,284,"目标温度",32,220);
+	
+	Show_Str_Mid(130,284,"目标温度",32,220);
+    char buf_target[16];
+    sprintf(buf_target, "%d.%d", target_temp/10, target_temp%10);
+    Show_Str(240,284,100,16,buf_target,16,0);
+	
     Show_Str_Mid(130,359,"温度曲线",32,220);
     Show_Str_Mid(130,434,"温度校准",32,220);
-    Show_Str_Mid(130,509,"最高偏差",32,220);
+    Show_Str_Mid(130,509,"最高偏差mqtt",32,220);
     Show_Str_Mid(130,584,"最低偏差",32,220);
 
     LCD_DrawRectangle(130,200,350,250);
@@ -343,6 +363,32 @@ void UI_301(void) {
 
     current_screen = 41; // 第2页
 }
+
+void UI_310(void) {
+    LCD_Clear(WHITE);
+
+    Show_Str_Mid(130,209,"Target Temp",32,220);
+    char buf[16];
+    sprintf(buf,"%d.%d", target_temp/10, target_temp%10);
+    Show_Str_Mid(130,284,buf,32,220);
+
+    Show_Str(150,340,40,16,"+",16,0);
+    LCD_DrawRectangle(140,330,190,380);
+    Show_Str(150,400,40,16,"-",16,0);
+    LCD_DrawRectangle(140,390,190,440);
+
+    Show_Str(260,340,40,16,"+",16,0);
+    LCD_DrawRectangle(250,330,300,380);
+    Show_Str(260,400,40,16,"-",16,0);
+    LCD_DrawRectangle(250,390,300,440);
+
+    Show_Str(25,23,200,16,"Back",16,0);
+    LCD_DrawRectangle(20,20,110,40);
+
+    current_screen = 42;
+}
+
+
 
 // 报警状态查询 主菜单
 void UI_400(void) {
@@ -537,7 +583,7 @@ void UI_600(void) {
     Show_Str_Mid(130,284,"设备信息维护",32,220);
     Show_Str_Mid(130,359,"采集网络设置",32,220);
     Show_Str_Mid(130,434,"上行网络设置",32,220);
-    Show_Str_Mid(130,509,"密码修改",32,220);
+    Show_Str_Mid(130,509,"mqttTest",32,220);
 
     LCD_DrawRectangle(130,200,350,250);
     LCD_DrawRectangle(130,275,350,325);
@@ -568,6 +614,73 @@ void UI_610(void) {
 
     current_screen = 71;
 }
+
+void UI_611(void) {
+    if(!rtc_set_initialized){
+        RTC_TimeTypeDef t;
+        RTC_DateTypeDef d;
+        HAL_RTC_GetTime(&RTC_Handler,&t,RTC_FORMAT_BIN);
+        HAL_RTC_GetDate(&RTC_Handler,&d,RTC_FORMAT_BIN);
+        rtc_set_year = d.Year;
+        rtc_set_month = d.Month;
+        rtc_set_day = d.Date;
+        rtc_set_hour = t.Hours;
+        rtc_set_min = t.Minutes;
+        rtc_set_sec = t.Seconds;
+        rtc_set_initialized = 1;
+    }
+    LCD_Clear(WHITE);
+    char buf[8];
+    Show_Str(40,100,80,16,"Year",16,0);
+    sprintf(buf,"%02d",rtc_set_year);
+    Show_Str(150,100,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,90,260,120);
+    Show_Str(235,93,80,16,"+",16,0);
+    LCD_DrawRectangle(270,90,300,120);
+    Show_Str(275,93,80,16,"-",16,0);
+    Show_Str(40,160,80,16,"Mon",16,0);
+    sprintf(buf,"%02d",rtc_set_month);
+    Show_Str(150,160,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,150,260,180);
+    Show_Str(235,153,80,16,"+",16,0);
+    LCD_DrawRectangle(270,150,300,180);
+    Show_Str(275,153,80,16,"-",16,0);
+    Show_Str(40,220,80,16,"Day",16,0);
+    sprintf(buf,"%02d",rtc_set_day);
+    Show_Str(150,220,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,210,260,240);
+    Show_Str(235,213,80,16,"+",16,0);
+    LCD_DrawRectangle(270,210,300,240);
+    Show_Str(275,213,80,16,"-",16,0);
+    Show_Str(40,280,80,16,"Hour",16,0);
+    sprintf(buf,"%02d",rtc_set_hour);
+    Show_Str(150,280,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,270,260,300);
+    Show_Str(235,273,80,16,"+",16,0);
+    LCD_DrawRectangle(270,270,300,300);
+    Show_Str(275,273,80,16,"-",16,0);
+    Show_Str(40,340,80,16,"Min",16,0);
+    sprintf(buf,"%02d",rtc_set_min);
+    Show_Str(150,340,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,330,260,360);
+    Show_Str(235,333,80,16,"+",16,0);
+    LCD_DrawRectangle(270,330,300,360);
+    Show_Str(275,333,80,16,"-",16,0);
+    Show_Str(40,400,80,16,"Sec",16,0);
+    sprintf(buf,"%02d",rtc_set_sec);
+    Show_Str(150,400,80,16,(uint8_t*)buf,16,0);
+    LCD_DrawRectangle(230,390,260,420);
+    Show_Str(235,393,80,16,"+",16,0);
+    LCD_DrawRectangle(270,390,300,420);
+    Show_Str(275,393,80,16,"-",16,0);
+    Show_Str_Mid(130,459,"OK",32,220);
+    LCD_DrawRectangle(130,450,350,500);
+    Show_Str(25,23,200,16,"Back",16,0);
+    LCD_DrawRectangle(20,20,110,40);
+    current_screen = 78;
+}
+
+
 void UI_620(void) {
     LCD_Clear(WHITE);
 
@@ -659,9 +772,9 @@ void UI_650(void) {
 void UI_660(void) {
     LCD_Clear(WHITE);
 
-    Show_Str_Mid(130,209,"用户01",32,220);
-    Show_Str_Mid(130,284,"用户02",32,220);
-    Show_Str_Mid(130,359,"用户03",32,220);
+    Show_Str_Mid(130,209,"mqttdebug",32,220);
+    Show_Str_Mid(130,284,"send",32,220);
+    Show_Str_Mid(130,359,"00000",32,220);
 
     LCD_DrawRectangle(130,200,350,250);
     LCD_DrawRectangle(130,275,350,325);
@@ -671,6 +784,31 @@ void UI_660(void) {
     LCD_DrawRectangle(20,20,110,40);
 
     current_screen = 77;
+}
+
+static void UI_ESP8266_Send(const char *cmd) {
+    u16 len=0;
+    memset(esp8266_resp,0,sizeof(esp8266_resp));
+    ESP8266_SendCmd((char*)cmd,"OK",2000);
+    ESP8266_Receive_Data((u8*)esp8266_resp,&len);
+    esp8266_resp[len]=0;
+    LCD_Fill(25,520,455,560,WHITE);
+    Show_Str(25,520,430,16,(u8*)esp8266_resp,16,0);
+}
+
+void UI_ESP8266(void) {
+    LCD_Clear(WHITE);
+    Show_Str_Mid(130,209,"ESP8266",32,220);
+    Show_Str_Mid(130,259,"AT",32,220);
+    Show_Str_Mid(130,334,"AT+RST",32,220);
+    Show_Str_Mid(130,409,"AT+GMR",32,220);
+    LCD_DrawRectangle(130,250,350,300);
+    LCD_DrawRectangle(130,325,350,375);
+    LCD_DrawRectangle(130,400,350,450);
+    Show_Str(25,23,200,16,"返回上一级",16,0);
+    LCD_DrawRectangle(20,20,110,40);
+    Show_Str(25,480,200,16,"Resp:",16,0);
+    current_screen = 80;
 }
 
 void UI_TouchHandler(u16 x, u16 y){
@@ -881,6 +1019,8 @@ LCD_GetCursor(&x, &y);
             // 当前温度
         }
         else if (x > 130 && x < 350 && y > 275 && y < 325) {
+			current_screen = 42;
+            UI_310();
             // 目标温度
         }
         else if (x > 130 && x < 350 && y > 350 && y < 400) {
@@ -922,6 +1062,30 @@ LCD_GetCursor(&x, &y);
         else if (x > 0 && x < 80 && y > 0 && y < 80) {
             current_screen = 20;
             UI_Main(); // 返回上一级
+        }
+        break;
+		
+		
+    case 42: // UI_310
+        if (x > 140 && x < 190 && y > 330 && y < 380) {
+            target_temp += 10;
+            UI_310();
+        }
+        else if (x > 140 && x < 190 && y > 390 && y < 440) {
+            if(target_temp >= 10) target_temp -= 10;
+            UI_310();
+        }
+        else if (x > 250 && x < 300 && y > 330 && y < 380) {
+            if((target_temp %10) < 9) target_temp += 1;
+            UI_310();
+        }
+        else if (x > 250 && x < 300 && y > 390 && y < 440) {
+            if((target_temp %10) > 0) target_temp -= 1;
+            UI_310();
+        }
+        else if (x > 0 && x < 80 && y > 0 && y < 80) {
+            current_screen = 40;
+            UI_300();
         }
         break;
 		
@@ -1022,8 +1186,10 @@ LCD_GetCursor(&x, &y);
         break;
 
     // -------- 设备信息设置 --------
-    case 71: if (x < 80 && x>0 && y < 80 && y > 0) { current_screen = 70; UI_600(); } break;
-
+    case 71:
+        if (x > 130 && x < 350 && y > 200 && y < 250) { rtc_set_initialized = 0; current_screen = 78; UI_611(); }
+        else if (x < 80 && x>0 && y < 80 && y > 0) { current_screen = 70; UI_600(); }
+        break;
     // -------- 设备信息维护 --------
     case 72: // UI_620
         if (x > 330 && x < 430 && y > 700 && y < 750) { current_screen = 73; UI_621(); }
@@ -1046,8 +1212,48 @@ LCD_GetCursor(&x, &y);
     case 76: if (x < 80 && x>0 && y < 80 && y > 0) { current_screen = 70; UI_600(); } break;
 
     // -------- 密码修改 --------
-    case 77: if (x < 80 && x>0 && y < 80 && y > 0) { current_screen = 70; UI_600(); } break;
+    case 77:
+		        if (x > 130 && x < 350 && y > 275 && y < 325) { ESP8266_MQTT_Debug(); }
+        else if (x < 80 && x>0 && y < 80 && y > 0) { current_screen = 70; UI_600(); }
+        break;
+		
+     case 78:
+        if (x < 80 && x>0 && y < 80 && y > 0) { rtc_set_initialized = 0; current_screen = 71; UI_610(); }
+        else if (x > 230 && x < 260 && y > 90 && y < 120) { rtc_set_year = (rtc_set_year + 1) % 100; UI_611(); }
+        else if (x > 270 && x < 300 && y > 90 && y < 120) { if (rtc_set_year > 0) rtc_set_year--; else rtc_set_year = 99; UI_611(); }
+        else if (x > 230 && x < 260 && y > 150 && y < 180) { rtc_set_month++; if (rtc_set_month > 12) rtc_set_month = 1; UI_611(); }
+        else if (x > 270 && x < 300 && y > 150 && y < 180) { if (rtc_set_month > 1) rtc_set_month--; else rtc_set_month = 12; UI_611(); }
+        else if (x > 230 && x < 260 && y > 210 && y < 240) { rtc_set_day++; if (rtc_set_day > 31) rtc_set_day = 1; UI_611(); }
+        else if (x > 270 && x < 300 && y > 210 && y < 240) { if (rtc_set_day > 1) rtc_set_day--; else rtc_set_day = 31; UI_611(); }
+        else if (x > 230 && x < 260 && y > 270 && y < 300) { rtc_set_hour++; if (rtc_set_hour > 23) rtc_set_hour = 0; UI_611(); }
+        else if (x > 270 && x < 300 && y > 270 && y < 300) { if (rtc_set_hour > 0) rtc_set_hour--; else rtc_set_hour = 23; UI_611(); }
+        else if (x > 230 && x < 260 && y > 330 && y < 360) { rtc_set_min++; if (rtc_set_min > 59) rtc_set_min = 0; UI_611(); }
+        else if (x > 270 && x < 300 && y > 330 && y < 360) { if (rtc_set_min > 0) rtc_set_min--; else rtc_set_min = 59; UI_611(); }
+        else if (x > 230 && x < 260 && y > 390 && y < 420) { rtc_set_sec++; if (rtc_set_sec > 59) rtc_set_sec = 0; UI_611(); }
+        else if (x > 270 && x < 300 && y > 390 && y < 420) { if (rtc_set_sec > 0) rtc_set_sec--; else rtc_set_sec = 59; UI_611(); }
+        else if (x > 130 && x < 350 && y > 450 && y < 500) {
+            RTC_Set_Date(rtc_set_year, rtc_set_month, rtc_set_day, 0);
+            RTC_Set_Time(rtc_set_hour, rtc_set_min, rtc_set_sec, RTC_HOURFORMAT12_AM);
+            rtc_set_initialized = 0;
+            current_screen = 71;
+            UI_610();
+        }
+        break;
 
+	case 80: // ESP8266 AT
+		if (x > 130 && x < 350 && y > 250 && y < 300) {
+			UI_ESP8266_Send("AT\r\n");
+		} else if (x > 130 && x < 350 && y > 325 && y < 375) {
+			UI_ESP8266_Send("AT+RST\r\n");
+		} else if (x > 130 && x < 350 && y > 400 && y < 450) {
+			UI_ESP8266_Send("AT+GMR\r\n");
+		} else if (x < 80 && x>0 && y < 80 && y > 0) {
+			current_screen = 0;
+			UI_Main();
+		}
+	break;
+
+		
 	case 0: // 主菜单
 
 
@@ -1069,7 +1275,7 @@ LCD_GetCursor(&x, &y);
         } 
         else if (x > 130 && x < 350 && y > 550 && y < 600) {
             
-            UI_500();
+            UI_ESP8266();
         }
 		else if (x > 130 && x < 350 && y > 600 && y < 675) {
             

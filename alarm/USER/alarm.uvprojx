@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F429xx</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\OBJ;..\USER;..\HALLIB\STM32F4xx_HAL_Driver\Inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\DHT11;..\HARDWARE\KEY;..\HARDWARE\PCF8574;..\HARDWARE\RS485;..\HARDWARE\IIC;..\HARDWARE\zmpt101b;..\HARDWARE\ADC;..\HARDWARE\easyUI;..\HARDWARE\lcd;..\HARDWARE\touch;..\HARDWARE\24CXX;..\HARDWARE\SDRAM;..\HARDWARE\W25QXX;..\HARDWARE\SDIO;..\HARDWARE\NAND;..\FATFS\src;..\FATFS\exfuns;..\MALLOC;..\TEXT;..\HARDWARE\SPI;..\HARDWARE\RTC;..\USMART</IncludePath>
+              <IncludePath>..\CORE;..\OBJ;..\USER;..\HALLIB\STM32F4xx_HAL_Driver\Inc;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\HARDWARE\LED;..\HARDWARE\DHT11;..\HARDWARE\KEY;..\HARDWARE\PCF8574;..\HARDWARE\RS485;..\HARDWARE\IIC;..\HARDWARE\zmpt101b;..\HARDWARE\ADC;..\HARDWARE\easyUI;..\HARDWARE\lcd;..\HARDWARE\touch;..\HARDWARE\24CXX;..\HARDWARE\SDRAM;..\HARDWARE\W25QXX;..\HARDWARE\SDIO;..\HARDWARE\NAND;..\FATFS\src;..\FATFS\exfuns;..\MALLOC;..\TEXT;..\HARDWARE\SPI;..\HARDWARE\RTC;..\USMART;..\HARDWARE\esp8266driver</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -744,6 +744,16 @@
               <FileName>rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\RTC\rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>dwt_stm32_delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\esp8266driver\dwt_stm32_delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>ESP8266.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\esp8266driver\ESP8266.c</FilePath>
             </File>
           </Files>
         </Group>

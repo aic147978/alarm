@@ -63,6 +63,8 @@
 "..\obj\w25qxx.o"
 "..\obj\spi.o"
 "..\obj\rtc.o"
+"..\obj\dwt_stm32_delay.o"
+"..\obj\esp8266.o"
 "..\obj\fontupd.o"
 "..\obj\text.o"
 "..\obj\mycc936.o"

@@ -24,6 +24,7 @@ void UI_AddButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
 
 // Ë¢ÐÂ°´Å¥ÏÔÊ¾
 void UI_DrawButtons(void);
+void UI_ESP8266(void);
 
 #endif
 
