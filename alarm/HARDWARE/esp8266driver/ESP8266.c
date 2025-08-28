@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "stm32f4xx_hal.h"
+#include "led.h"
 
 UART_HandleTypeDef ESP8266_UART_Handler;    //USART3
 
@@ -31,7 +32,7 @@ static void ESP8266_Clear(void)
     memset(ESP8266_RX_BUF,0,sizeof(ESP8266_RX_BUF));
 }
 
-//USART3≥ı ºªØ
+//USART3ÂàùÂßãÂåñ
 void ESP8266_Init(u32 bound)
 {
     GPIO_InitTypeDef GPIO_Initure;
@@ -121,6 +122,32 @@ void ESP8266_MQTT_Debug(void)
     ESP8266_SendCmd("AT+MQTTCONN=0,\"broker.emqx.io\",1883,1\r\n","OK",4000);
     ESP8266_SendCmd("AT+MQTTSUB=0,\"esp/test1\",1\r\n","OK",4000);
     ESP8266_SendCmd("AT+MQTTPUB=0,\"esp/test1\",\"hello world\",1,0\r\n","OK",4000);
+}
+
+void ESP8266_MQTT_LED_Setup(void)
+{
+    ESP8266_SendCmd("AT+MQTTUSERCFG=0,1,\"aic147978\",\"admin\",\"admin123\",0,0,\"\"\r\n","OK",2000);
+    ESP8266_SendCmd("AT+MQTTCONN=0,\"broker.emqx.io\",1883,1\r\n","OK",4000);
+    ESP8266_SendCmd("AT+MQTTSUB=0,\"esp/test1\",1\r\n","OK",4000);
+}
+
+void ESP8266_MQTT_LED_Process(void)
+{
+    u8 buf[512];
+    u16 len;
+    ESP8266_Receive_Data(buf,&len);
+    if(len)
+    {
+        buf[len]=0;
+        if(strstr((char*)buf,"lightup"))
+        {
+            LED1=0;
+        }
+        else if(strstr((char*)buf,"lightdown"))
+        {
+            LED1=1;
+        }
+    }
 }
 
 
