@@ -137,6 +137,7 @@ void ctp_test(void)
 	while(1)
 	{
 		tp_dev.scan(0);
+
 		for(t=0;t<maxp;t++)
 		{
 			if((tp_dev.sta)&(1<<t))
@@ -164,6 +165,7 @@ void ctp_test(void)
 		delay_ms(5);i++;
 		UI_DATA_Show(abc,bac);
 		if(i%20==0)LED0=!LED0;
+
 	}	
 }
 
