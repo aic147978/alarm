@@ -15,5 +15,6 @@ u8 ESP8266_StartTCP(char *ip,char *port);
 u8 ESP8266_SendData(char *data);
 void ESP8266_Receive_Data(u8 *buf,u16 *len);
 void ESP8266_MQTT_Debug(void);
+void ESP8266_MQTT_LED_Process(void);
 
 #endif

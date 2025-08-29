@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "stm32f4xx_hal.h"
+#include "led.h"
 
 UART_HandleTypeDef ESP8266_UART_Handler;    //USART3
 
@@ -122,5 +123,57 @@ void ESP8266_MQTT_Debug(void)
     ESP8266_SendCmd("AT+MQTTSUB=0,\"esp/test1\",1\r\n","OK",4000);
     ESP8266_SendCmd("AT+MQTTPUB=0,\"esp/test1\",\"hello world\",1,0\r\n","OK",4000);
 }
+
+void ESP8266_MQTT_LED_Setup(void)
+{
+    ESP8266_SendCmd("AT+MQTTUSERCFG=0,1,\"aic147978\",\"admin\",\"admin123\",0,0,\"\"\r\n","OK",2000);
+    ESP8266_SendCmd("AT+MQTTCONN=0,\"broker.emqx.io\",1883,1\r\n","OK",4000);
+    ESP8266_SendCmd("AT+MQTTSUB=0,\"esp/test1\",1\r\n","OK",4000);
+}
+
+void ESP8266_MQTT_LED_Process(void)
+{
+    u8 buf[512];
+    u16 len;
+    ESP8266_Receive_Data(buf, &len);
+    if(len)
+    {
+        buf[len] = 0;  // 末尾加 '\0'，变成 C 字符串
+        char *payload = NULL;
+
+        // 找到第三个逗号（payload 起始位置）
+		char *p = (char *)buf;
+        int comma_count = 0;
+        while(*p && comma_count < 3)
+        {
+            if(*p == ',') comma_count++;
+            p++;
+        }
+        if(comma_count == 3)
+        {
+            payload = p;  // payload 起始
+        }
+
+        if(payload)
+        {
+            if(strncmp(payload, "lightup", 7) == 0)
+            {
+                LED1 = 0;
+            }
+            else if(strncmp(payload, "lightdown", 9) == 0)
+            {
+                LED1 = 1;
+            }
+            else if(strncmp(payload, "blink", 5) == 0)   // 你可以继续扩展命令
+            {
+                for(int i=0; i<5; i++){
+                    LED1 = 0; delay_ms(200);
+                    LED1 = 1; delay_ms(200);
+                }
+            }
+        }
+    }
+}
+
 
 

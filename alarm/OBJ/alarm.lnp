@@ -2,6 +2,7 @@
 "..\obj\main.o"
 "..\obj\stm32f4xx_it.o"
 "..\obj\system_stm32f4xx.o"
+"..\obj\midware.o"
 "..\obj\startup_stm32f429xx.o"
 "..\obj\stm32f4xx_hal.o"
 "..\obj\stm32f4xx_hal_cortex.o"
@@ -75,6 +76,14 @@
 "..\obj\usmart.o"
 "..\obj\usmart_config.o"
 "..\obj\usmart_str.o"
+"..\obj\heap_4.o"
+"..\obj\port.o"
+"..\obj\croutine.o"
+"..\obj\event_groups.o"
+"..\obj\list.o"
+"..\obj\queue.o"
+"..\obj\tasks.o"
+"..\obj\timers.o"
 --strict --scatter "..\OBJ\alarm.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

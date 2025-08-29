@@ -102,3 +102,14 @@
 ..\obj\main.o: ..\USMART\usmart_str.h
 ..\obj\main.o: ..\HARDWARE\RTC\rtc.h
 ..\obj\main.o: ..\HARDWARE\esp8266driver\esp8266.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\FreeRTOS.h
+..\obj\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\FreeRTOSConfig.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\projdefs.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\portable.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\deprecated_definitions.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\mpu_wrappers.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\task.h
+..\obj\main.o: ..\MIddlewares\FreeRTOS\include\list.h
+..\obj\main.o: ..\MIddlewares\midware\midware.h

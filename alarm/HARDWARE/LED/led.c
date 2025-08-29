@@ -45,3 +45,6 @@ void Temp_Control(uint8_t temp,uint8_t set_temp)
         HAL_GPIO_WritePin(GPIOA,GPIO_PIN_15,GPIO_PIN_RESET);
     }
 }
+
+
+

@@ -1,5 +1,4 @@
 ..\obj\delay.o: ..\SYSTEM\delay\delay.c
-..\obj\delay.o: ..\SYSTEM\delay\delay.h
 ..\obj\delay.o: ..\SYSTEM\sys\sys.h
 ..\obj\delay.o: ..\USER\stm32f4xx.h
 ..\obj\delay.o: ..\USER\stm32f429xx.h
@@ -72,3 +71,14 @@
 ..\obj\delay.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h
 ..\obj\delay.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pcd_ex.h
 ..\obj\delay.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_hcd.h
+..\obj\delay.o: ..\SYSTEM\delay\delay.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\FreeRTOS.h
+..\obj\delay.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\FreeRTOSConfig.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\projdefs.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\portable.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\deprecated_definitions.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\portable\RVDS\ARM_CM4F\portmacro.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\mpu_wrappers.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\task.h
+..\obj\delay.o: ..\MIddlewares\FreeRTOS\include\list.h

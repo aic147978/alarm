@@ -1,9 +1,10 @@
 #include "usart.h"
 #include "delay.h"
+#include "sys.h"
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用os,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
-#include "includes.h"					//os 使用	  
+#include "sys.h"					//os 使用	  
 #endif
 
 //串口1初始化		   
@@ -127,9 +128,7 @@ void USART1_IRQHandler(void)
 { 
 	uint32_t timeout=0;
 	uint32_t maxDelay=0x1FFFF;
-#if SYSTEM_SUPPORT_OS	 	//使用OS
-	OSIntEnter();    
-#endif
+
 	
 	HAL_UART_IRQHandler(&UART1_Handler);	//调用HAL库中断处理公用函数
 	
@@ -147,9 +146,7 @@ void USART1_IRQHandler(void)
 	 timeout++; //超时处理
 	 if(timeout>maxDelay) break;	
 	}
-#if SYSTEM_SUPPORT_OS	 	//使用OS
-	OSIntExit();  											 
-#endif
+
 } 
 #endif	
 

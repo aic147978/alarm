@@ -74,3 +74,4 @@
 ..\obj\esp8266.o: ..\HALLIB\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_hcd.h
 ..\obj\esp8266.o: ..\SYSTEM\delay\delay.h
 ..\obj\esp8266.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+..\obj\esp8266.o: ..\HARDWARE\LED\led.h

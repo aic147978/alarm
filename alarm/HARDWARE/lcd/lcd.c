@@ -15,6 +15,9 @@ u32 BACK_COLOR = 0xFFFFFFFF;  	//背景色
 //默认为竖屏
 _lcd_dev lcddev;
 
+
+
+
 //写寄存器函数
 //regval:寄存器值
 void LCD_WR_REG(vu16 regval)

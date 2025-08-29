@@ -2,31 +2,7 @@
 #define __LCD_H		
 #include "sys.h"	 
 #include "stdlib.h" 
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32开发板
-//2.8寸/3.5寸/4.3寸/7寸 TFT液晶驱动	  
-//支持驱动IC型号包括:ILI9341/NT35310/NT35510/SSD1963/ST7789/ST7796/ILI9806等
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2016/1/6
-//版本：V1.5
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved
-//********************************************************************************	 
-//升级说明
-//V1.1
-//新增对RGBLCD屏的支持(使用LTDC).
-//V1.2 20211111
-//1,新增对ST7789驱动IC的支持
-//V1.3 20211208
-//修改NT5510 ID读取方式,改为先发送秘钥,然后读取C500和C501,从而获取正确的ID(0X5510)
-//V1.4 20211222
-//解决因NT5510 ID读取（发送C501指令）导致SSD1963误触发软件复位进而读取不到ID问题，加延时解决
-//V1.5 20230608
-//新增对ST7796和ILI9806 IC支持
-//////////////////////////////////////////////////////////////////////////////////	 
+ 
 
 //LCD重要参数集
 typedef struct  
@@ -130,7 +106,9 @@ void LCD_WriteRAM(u16 RGB_Code);
 void LCD_SSD_BackLightSet(u8 pwm);							//SSD1963 背光控制
 void LCD_Scan_Dir(u8 dir);									//设置屏扫描方向
 void LCD_Display_Dir(u8 dir);								//设置屏幕显示方向
-void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height);	//设置窗口					   						   																			 
+void LCD_Set_Window(u16 sx,u16 sy,u16 width,u16 height);	//设置窗口	
+
+
 //LCD分辨率设置
 #define SSD_HOR_RESOLUTION		800		//LCD水平分辨率
 #define SSD_VER_RESOLUTION		480		//LCD垂直分辨率
